@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python MCQ Assessment - 100 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .quiz-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .start-btn, .restart-btn, .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        .start-btn:hover, .restart-btn:hover, .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-btn:active, .restart-btn:active, .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .quiz-screen {
+            display: none;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-counter {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .question-container {
+            background: #f5f5f5;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .difficulty-beginner {
+            background: #4caf50;
+        }
+
+        .difficulty-intermediate {
+            background: #ff9800;
+        }
+
+        .difficulty-advanced {
+            background: #f44336;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: #667eea;
+            background: #f9f9f9;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex-grow: 1;
+            font-size: 1em;
+            color: #333;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e8eaf6;
+        }
+
+        .option.correct {
+            border-color: #4caf50;
+            background: #f1f8e9;
+            border-width: 2px;
+        }
+
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            border-width: 2px;
+        }
+
+
+        .feedback-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            animation: slideIn 0.4s ease;
+        }
+
+        .feedback-correct {
+            background: #f1f8e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+
+        .feedback-incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+
+        .correct-answer-info {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 4px;
+            color: #2e7d32;
+            font-size: 0.95em;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            color: #333;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .score-circle.pass {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        }
+
+        .score-circle.fail {
+            background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+        }
+
+        .result-message {
+            font-size: 1.8em;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .result-message.pass {
+            color: #4caf50;
+        }
+
+        .result-message.fail {
+            color: #f44336;
+        }
+
+        .result-details {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .result-details h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            color: #666;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .passing-requirement {
+            background: #fffde7;
+            border-left: 4px solid #fbc02d;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 0;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: white;
+        }
+
+        .theme-icon {
+            width: 28px;
+            height: 28px;
+            stroke: #333;
+            transition: all 0.3s ease;
+        }
+
+        .light-icon {
+            display: block;
+        }
+
+        .dark-icon {
+            display: none;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        body.dark-mode .container {
+            background: #000;
+            color: #fff;
+        }
+
+        body.dark-mode .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        body.dark-mode .question-container {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        body.dark-mode .question-text {
+            color: #fff;
+        }
+
+        body.dark-mode .option {
+            background: #1a1a1a;
+            border-color: #444;
+            color: #fff;
+        }
+
+        body.dark-mode .option:hover:not(.disabled) {
+            border-color: #667eea;
+            background: #2a2a2a;
+        }
+
+        body.dark-mode .option label {
+            color: #fff;
+        }
+
+        body.dark-mode .option.selected {
+            border-color: #667eea;
+            background: #333;
+        }
+
+        body.dark-mode .option.correct {
+            border-color: #4caf50;
+            background: #1a3a1a;
+        }
+
+        body.dark-mode .option.incorrect {
+            border-color: #f44336;
+            background: #3a1a1a;
+        }
+
+        body.dark-mode .nav-btn {
+            background: #1a1a1a;
+            border-color: #444;
+            color: #fff;
+        }
+
+        body.dark-mode .nav-btn:hover:not(:disabled) {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        body.dark-mode .question-counter {
+            color: #aaa;
+        }
+
+        body.dark-mode .progress-bar {
+            background: #333;
+        }
+
+        body.dark-mode .result-details {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .result-details h3,
+        body.dark-mode .detail-row {
+            color: #fff;
+        }
+
+        body.dark-mode .detail-row {
+            border-bottom-color: #333;
+        }
+
+        body.dark-mode .detail-value {
+            color: #fff;
+        }
+
+        body.dark-mode .result-message {
+            color: #fff;
+        }
+
+        body.dark-mode .passing-requirement {
+            background: #1a1a1a;
+            border-left-color: #667eea;
+            color: #fff;
+        }
+
+        body.dark-mode .correct-answer-info {
+            background: #1a3a1a;
+            border-left-color: #4caf50;
+            color: #4caf50;
+        }
+
+        body.dark-mode .feedback-incorrect {
+            background: #3a1a1a;
+            color: #f44336;
+            border-color: #f44336;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: #1a1a1a;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .light-icon {
+            display: none;
+        }
+
+        body.dark-mode .dark-icon {
+            display: block;
+            stroke: #fff;
+        }
+
+        body.dark-mode .theme-icon {
+            stroke: #fff;
+        }
+
+        body.dark-mode .start-screen h2,
+        body.dark-mode .start-screen p {
+            color: #fff;
+        }
+
+        body.dark-mode h2 {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .quiz-info {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .question-text {
+                font-size: 1em;
+            }
+
+            .score-circle {
+                width: 150px;
+                height: 150px;
+                font-size: 1.5em;
+            }
+
+            .theme-toggle {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" style="position: relative;">
+            <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                <!-- Light Mode Icon (Sun Outline) -->
+                <svg id="lightIcon" class="theme-icon light-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <!-- Dark Mode Icon (Moon Outline) -->
+                <svg id="darkIcon" class="theme-icon dark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <h1>🐍 Python MCQ Assessment</h1>
+            <p>100 Comprehensive Questions - 70% Required to Pass</p>
+        </div>
+
+        <div class="content">
+            <!-- Start Screen -->
+            <div class="start-screen" id="startScreen">
+                <h2>Welcome to Python MCQ Quiz</h2>
+                <p style="color: #666; margin-bottom: 20px; font-size: 1.1em;">Test your Python knowledge with 100 carefully curated questions across 9 lessons</p>
+
+                <div class="quiz-info">
+                    <div class="info-card">
+                        <h3>📚 Lessons</h3>
+                        <p>9</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>❓ Questions</h3>
+                        <p>100</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>⏱️ Time</h3>
+                        <p>Unlimited</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>✅ Pass Mark</h3>
+                        <p>70%</p>
+                    </div>
+                </div>
+
+                <div class="passing-requirement">
+                    <strong>📌 Passing Requirement: </strong>You need to answer at least 70 out of 100 questions correctly (70%) to pass this assessment.
+                </div>
+
+                <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div class="quiz-screen" id="quizScreen">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div class="question-counter" id="questionCounter"></div>
+
+                <div class="question-container" id="questionContainer"></div>
+
+                <div class="navigation">
+                    <button class="nav-btn" id="prevBtn" onclick="previousQuestion()" disabled>← Previous</button>
+                    <button class="nav-btn" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+                    <button class="submit-btn" id="submitBtn" onclick="submitQuiz()" style="flex: 2; display: none;">Submit Quiz</button>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div class="results-screen" id="resultsScreen">
+                <h2 style="color: #333; margin-bottom: 20px;">Quiz Completed!</h2>
+
+                <div id="scoreCircle" class="score-circle pass">
+                    <div id="scoreValue">0</div>
+                    <div style="font-size: 0.6em; margin-top: 10px;">/ 100</div>
+                </div>
+
+                <div style="font-size: 2.5em; font-weight: bold; color: #667eea; margin: 20px 0;">
+                    <span id="percentage">0%</span>
+                </div>
+
+                <div id="resultMessage" class="result-message pass">Congratulations! You Passed! 🎉</div>
+
+                <div class="result-details">
+                    <h3>📊 Assessment Details</h3>
+                    <div class="detail-row">
+                        <span>Total Questions:</span>
+                        <span class="detail-value">100</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Correct Answers:</span>
+                        <span class="detail-value" id="correctCount">0</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Wrong Answers:</span>
+                        <span class="detail-value" id="wrongCount">0</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Percentage:</span>
+                        <span class="detail-value" id="percentage">0%</span>
+                    </div>
+                    <div class="detail-row" style="border-bottom: 2px solid #667eea; padding-top: 15px; padding-bottom: 15px;">
+                        <span style="font-weight: bold; color: #333; font-size: 1.1em;">Status:</span>
+                        <span class="detail-value" id="statusText" style="font-size: 1.1em;">PASS</span>
+                    </div>
+                </div>
+
+                <button class="restart-btn" onclick="restartQuiz()" style="width: 100%; margin-top: 30px;">Take Quiz Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const lightIcon = document.getElementById('lightIcon');
+            const darkIcon = document.getElementById('darkIcon');
+
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                lightIcon.style.display = 'block';
+                darkIcon.style.display = 'none';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                lightIcon.style.display = 'none';
+                darkIcon.style.display = 'block';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Initialize Theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const lightIcon = document.getElementById('lightIcon');
+            const darkIcon = document.getElementById('darkIcon');
+
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                lightIcon.style.display = 'none';
+                darkIcon.style.display = 'block';
+            } else {
+                document.body.classList.remove('dark-mode');
+                lightIcon.style.display = 'block';
+                darkIcon.style.display = 'none';
+            }
+        }
+
+        // Initialize theme when page loads
+        window.addEventListener('DOMContentLoaded', initTheme);
+
+        // All 100 Questions Data
+        const questions = [
+            // Lesson 1: Introduction to Python (12 questions)
+            {id: 1, question: "Python is a _____ language known for its simplicity and readability.", options: {A: "low-level", B: "high-level", C: "machine-level", D: "assembly-level"}, correct: "B", difficulty: "beginner", lesson: "Introduction to Python"},
+            {id: 2, question: "What is Python bytecode?", options: {A: "Machine code executed directly by the CPU", B: "Intermediate representation of Python code executed by the Python interpreter", C: "Source code written by programmers", D: "Binary file format used for storage"}, correct: "B", difficulty: "beginner", lesson: "Introduction to Python"},
+            {id: 3, question: "In Python, indentation is used to:", options: {A: "Make code look prettier", B: "Define blocks of code and show relationships between code blocks", C: "Speed up code execution", D: "Reduce memory usage"}, correct: "B", difficulty: "beginner", lesson: "Introduction to Python"},
+            {id: 4, question: "What is type hinting in Python?", options: {A: "Mandatory type declaration enforced at compile time", B: "Optional type annotation that specifies expected types but is not enforced", C: "A mechanism for automatic type conversion", D: "Python's built-in automatic type inference system"}, correct: "B", difficulty: "intermediate", lesson: "Introduction to Python"},
+            {id: 5, question: "What is duck typing?", options: {A: "A programming paradigm involving waterfowl", B: "Focus on an object's capabilities rather than its type; 'if it walks like a duck, it's a duck'", C: "A method to check if an object belongs to a specific type", D: "A mechanism for type conversion in Python"}, correct: "B", difficulty: "intermediate", lesson: "Introduction to Python"},
+            {id: 6, question: "Which statement about Python's object-centric nature is TRUE?", options: {A: "Only classes are objects in Python", B: "Everything in Python is an object, including integers, strings, and functions", C: "Functions cannot be objects in Python", D: "Only primitive data types are objects"}, correct: "B", difficulty: "intermediate", lesson: "Introduction to Python"},
+            {id: 7, question: "What is the purpose of the dis module?", options: {A: "To disable or unload modules", B: "To disassemble and inspect the bytecode of Python objects", C: "To distribute code across multiple machines", D: "To display error messages in a formatted way"}, correct: "B", difficulty: "advanced", lesson: "Introduction to Python"},
+            {id: 8, question: "How does Python achieve platform independence?", options: {A: "By compiling source code directly to machine code", B: "Through bytecode compilation and interpretation by the Python Virtual Machine (PVM)", C: "By using OS-specific libraries internally", D: "Python is not actually platform independent"}, correct: "B", difficulty: "advanced", lesson: "Introduction to Python"},
+            {id: 9, question: "What is the difference between object-based and object-oriented languages?", options: {A: "There is no real difference between them", B: "Object-based support objects but not inheritance; OO languages support inheritance and polymorphism", C: "Object-oriented languages don't actually support objects", D: "Object-based languages are simply older versions of OO languages"}, correct: "B", difficulty: "advanced", lesson: "Introduction to Python"},
+            {id: 10, question: "Which is NOT a characteristic of Python as a language?", options: {A: "Supports multiple programming paradigms (functional, OOP, imperative)", B: "Has an extensive standard library", C: "Requires explicit memory management by programmers", D: "Emphasizes code clarity and readability"}, correct: "C", difficulty: "intermediate", lesson: "Introduction to Python"},
+            {id: 11, question: "What is the significance of 'first-class functions' in Python?", options: {A: "Functions can only be defined at module level (top-level)", B: "Functions can be passed as arguments, returned from functions, and assigned to variables", C: "Functions must be defined before they are called in code", D: "Functions are considered more important than classes in Python"}, correct: "B", difficulty: "advanced", lesson: "Introduction to Python"},
+            {id: 12, question: "When you run a Python script, what is the first step in the execution process?", options: {A: "Direct execution by the CPU using native machine code", B: "Compilation into bytecode by the Python compiler", C: "Interpretation directly by the Python interpreter", D: "Loading the script into the Python Virtual Machine"}, correct: "B", difficulty: "intermediate", lesson: "Introduction to Python"},
+
+            // Lesson 2: Data Types (12 questions)
+            {id: 13, question: "Which of the following is NOT a numeric type in Python?", options: {A: "int", B: "float", C: "complex", D: "string"}, correct: "D", difficulty: "beginner", lesson: "Data Types"},
+            {id: 14, question: "What is the output of: z = 3 + 4j; print(z.real)?", options: {A: "3", B: "4", C: "3.0", D: "7"}, correct: "C", difficulty: "beginner", lesson: "Data Types"},
+            {id: 15, question: "Which of the following creates an empty set?", options: {A: "empty_set = {}", B: "empty_set = []", C: "empty_set = set()", D: "empty_set = ()"}, correct: "C", difficulty: "beginner", lesson: "Data Types"},
+            {id: 16, question: "What is the range of integers that Python caches for interning?", options: {A: "-128 to 127", B: "-256 to 256", C: "-5 to 256", D: "-10 to 100"}, correct: "C", difficulty: "intermediate", lesson: "Data Types"},
+            {id: 17, question: "What is the difference between '==' and 'is' operators?", options: {A: "They are completely identical operators", B: "'==' checks value equality; 'is' checks if objects are the same object in memory", C: "'is' checks value equality; '==' checks memory location", D: "'is' operator is used only for comparing integers"}, correct: "B", difficulty: "intermediate", lesson: "Data Types"},
+            {id: 18, question: "What is implicit type casting in Python?", options: {A: "Manual conversion using int(), float(), str() functions", B: "Automatic conversion by Python when no data loss occurs", C: "Type conversion that results in data loss", D: "Type conversion that requires explicit function calls"}, correct: "B", difficulty: "intermediate", lesson: "Data Types"},
+            {id: 19, question: "What does int(3.9) return in Python?", options: {A: "3", B: "4", C: "3.9", D: "TypeError exception"}, correct: "A", difficulty: "beginner", lesson: "Data Types"},
+            {id: 20, question: "Which of the following is a truthy value in Python?", options: {A: "0 (zero)", B: "'' (empty string)", C: "'hello' (non-empty string)", D: "None"}, correct: "C", difficulty: "beginner", lesson: "Data Types"},
+            {id: 21, question: "What is the purpose of the id() function?", options: {A: "To retrieve the name/identifier of a variable", B: "To get the data type of an object", C: "To get the unique memory address/identifier of an object", D: "To convert an object to an integer value"}, correct: "C", difficulty: "intermediate", lesson: "Data Types"},
+            {id: 22, question: "What is None in Python?", options: {A: "An empty string value", B: "A special singleton object representing the absence of a value", C: "Equivalent to False value", D: "Equivalent to zero"}, correct: "B", difficulty: "beginner", lesson: "Data Types"},
+            {id: 23, question: "What does the isinstance() function do?", options: {A: "Returns the type of an object", B: "Checks if an object is an instance of a specified class", C: "Converts one type to another", D: "Deletes an object instance"}, correct: "B", difficulty: "intermediate", lesson: "Data Types"},
+            {id: 24, question: "What is UTF-8?", options: {A: "A Python data type", B: "A variable-length character encoding that represents Unicode characters", C: "A type of Python module", D: "A memory management technique"}, correct: "B", difficulty: "intermediate", lesson: "Data Types"},
+
+            // Lesson 3: Operators, Keywords & Variables (12 questions)
+            {id: 25, question: "What is the result of 5 % 2 in Python?", options: {A: "2", B: "1", C: "2.5", D: "0"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 26, question: "What is the result of 5 // 2 in Python?", options: {A: "2.5", B: "2", C: "3", D: "1"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 27, question: "What is the result of 2 ** 3 in Python?", options: {A: "6", B: "8", C: "5", D: "2"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 28, question: "What does the 'not' operator do?", options: {A: "Performs addition", B: "Reverses the truth value of a boolean", C: "Checks membership in a sequence", D: "Assigns a value to a variable"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 29, question: "What is the difference between 'and' and 'or' operators?", options: {A: "They are the same operator", B: "'and' returns True only if both are True; 'or' returns True if at least one is True", C: "'or' is faster than 'and'", D: "'and' works only with numbers"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 30, question: "What does the bitwise NOT operator (~) do?", options: {A: "Performs logical negation like 'not'", B: "Inverts all bits of a number (two's complement representation)", C: "Removes characters from a string", D: "Deletes a variable"}, correct: "B", difficulty: "advanced", lesson: "Operators, Keywords & Variables"},
+            {id: 31, question: "What is chained comparison in Python?", options: {A: "Comparing the same value multiple times", B: "Combining multiple comparison operators in a single expression", C: "Using if-elif-else chains", D: "Comparing lists with each other"}, correct: "B", difficulty: "intermediate", lesson: "Operators, Keywords & Variables"},
+            {id: 32, question: "What is the 'in' operator used for?", options: {A: "To assign values to variables", B: "To check if a value exists in a sequence", C: "To perform arithmetic operations", D: "To delete elements from collections"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 33, question: "What does the walrus operator ':=' do?", options: {A: "Compares two values", B: "Assigns and evaluates in a single expression", C: "Performs bitwise operations", D: "Creates a tuple"}, correct: "B", difficulty: "advanced", lesson: "Operators, Keywords & Variables"},
+            {id: 34, question: "How do you delete a variable in Python?", options: {A: "var = None", B: "remove(var)", C: "del var", D: "clear(var)"}, correct: "C", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+            {id: 35, question: "What naming convention is recommended for variable names in Python (PEP 8)?", options: {A: "CamelCase", B: "UPPER_CASE", C: "snake_case", D: "kebab-case"}, correct: "C", difficulty: "intermediate", lesson: "Operators, Keywords & Variables"},
+            {id: 36, question: "Can Python keywords be used as variable names?", options: {A: "Yes, they can always be used", B: "No, Python keywords are reserved and cannot be used as identifiers", C: "Only for private variables", D: "Yes, but it's not recommended"}, correct: "B", difficulty: "beginner", lesson: "Operators, Keywords & Variables"},
+
+            // Lesson 4: Strings & Type Casting (12 questions)
+            {id: 37, question: "How do you create a multi-line string in Python?", options: {A: "Using single quotes with \\n", B: "Using triple quotes (''' or \"\"\")", C: "Using the multiline() function", D: "Using double backslashes"}, correct: "B", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 38, question: "What does the \\t escape sequence represent?", options: {A: "A new line character", B: "A tab character", C: "A backspace character", D: "A carriage return"}, correct: "B", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 39, question: "What is the output of 'Hello'.upper()?", options: {A: "'hello'", B: "'HELLO'", C: "'Hello'", D: "'HeLLo'"}, correct: "B", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 40, question: "What does the split() method do?", options: {A: "Joins multiple strings together", B: "Splits a string into a list of substrings based on a delimiter", C: "Removes characters from a string", D: "Replaces characters in a string"}, correct: "B", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 41, question: "What is string interning?", options: {A: "Storing only one copy of identical strings in memory", B: "Converting strings to integers", C: "Adding strings together", D: "Splitting strings into characters"}, correct: "A", difficulty: "intermediate", lesson: "Strings & Type Casting"},
+            {id: 42, question: "What is the maximum length of a string that Python automatically interns?", options: {A: "5 characters", B: "10 characters", C: "20 characters", D: "50 characters"}, correct: "C", difficulty: "advanced", lesson: "Strings & Type Casting"},
+            {id: 43, question: "What is the difference between find() and index() methods?", options: {A: "They are identical methods", B: "find() returns -1 if not found; index() raises ValueError", C: "index() returns -1 if not found; find() raises ValueError", D: "find() is for strings; index() is for lists"}, correct: "B", difficulty: "intermediate", lesson: "Strings & Type Casting"},
+            {id: 44, question: "How do you perform string formatting using f-strings?", options: {A: "'{name} {age}'.format(name, age)", B: "'{} {}'.format(name, age)", C: "f'{name} {age}'", D: "'{} {}'.%s % (name, age)"}, correct: "C", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 45, question: "What does the join() method do?", options: {A: "Splits a string into parts", B: "Joins a list of strings into a single string using a separator", C: "Finds a substring within text", D: "Replaces text patterns"}, correct: "B", difficulty: "intermediate", lesson: "Strings & Type Casting"},
+            {id: 46, question: "What is the correct way to convert a float to an int?", options: {A: "float_to_int(3.9)", B: "int(3.9)", C: "round(3.9)", D: "3.9 as int"}, correct: "B", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 47, question: "What will str('hello') return?", options: {A: "An error message", B: "'hello' (the same string)", C: "The integer value of 'hello'", D: "The unicode representation"}, correct: "B", difficulty: "beginner", lesson: "Strings & Type Casting"},
+            {id: 48, question: "What is string slicing?", options: {A: "Cutting a string into individual characters", B: "Extracting a portion of a string using start:end:step notation", C: "Splitting a string by spaces", D: "Removing characters from a string"}, correct: "B", difficulty: "intermediate", lesson: "Strings & Type Casting"},
+
+            // Lesson 5: Control Flow & Loops (12 questions)
+            {id: 49, question: "What is the purpose of the 'if' statement?", options: {A: "To repeat code multiple times", B: "To execute code only if a condition is True", C: "To define a function", D: "To import modules"}, correct: "B", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 50, question: "What does 'elif' stand for?", options: {A: "else if", B: "end if", C: "else in function", D: "extended if"}, correct: "A", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 51, question: "What is printed: x=5; if x>10: print('A') elif x>0: print('B') else: print('C')", options: {A: "'A'", B: "'B'", C: "'C'", D: "'B' and 'C' both"}, correct: "B", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 52, question: "What is the purpose of the 'break' statement?", options: {A: "To skip to the next iteration", B: "To exit the loop immediately", C: "To pause the loop temporarily", D: "To restart the loop from beginning"}, correct: "B", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 53, question: "What is the purpose of the 'continue' statement?", options: {A: "To exit the loop", B: "To skip rest of current iteration and move to next", C: "To pause execution", D: "To restart the loop from beginning"}, correct: "B", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 54, question: "What is a 'for' loop used for?", options: {A: "To check if a condition is true", B: "To repeat code while a condition is true", C: "To iterate over a sequence for a fixed number of times", D: "To define functions"}, correct: "C", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 55, question: "What is a 'while' loop used for?", options: {A: "To iterate over a sequence", B: "To repeat code as long as a condition is true", C: "To define a function", D: "To import modules"}, correct: "B", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 56, question: "What will this code print? for i in range(3): print(i)", options: {A: "0 1 2 3", B: "0 1 2", C: "1 2 3", D: "0"}, correct: "B", difficulty: "beginner", lesson: "Control Flow & Loops"},
+            {id: 57, question: "What is a nested loop?", options: {A: "A loop inside another loop", B: "A loop that checks nested conditions", C: "A loop with nested data structures", D: "A loop that never ends"}, correct: "A", difficulty: "intermediate", lesson: "Control Flow & Loops"},
+            {id: 58, question: "What does the 'else' clause in a for loop do?", options: {A: "Handles errors in the loop", B: "Executes if the loop never runs", C: "Executes after loop completes (only if not broken)", D: "Executes instead of the loop"}, correct: "C", difficulty: "advanced", lesson: "Control Flow & Loops"},
+            {id: 59, question: "What is the Python 3.10 'match-case' statement used for?", options: {A: "Pattern matching; cleaner alternative to if-elif-else chains", B: "String pattern matching only", C: "Comparing two lists", D: "Finding the index of an element"}, correct: "A", difficulty: "advanced", lesson: "Control Flow & Loops"},
+            {id: 60, question: "How many times will this loop execute? for i in range(2, 8, 2): print(i)", options: {A: "2 times", B: "3 times", C: "5 times", D: "6 times"}, correct: "B", difficulty: "intermediate", lesson: "Control Flow & Loops"},
+
+            // Lesson 6: Lists, Tuples & Dictionary (12 questions)
+            {id: 61, question: "What is a list in Python?", options: {A: "An ordered, immutable collection", B: "An ordered, mutable collection of items", C: "An unordered collection of unique items", D: "A collection of key-value pairs"}, correct: "B", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 62, question: "How do you access the first element of list 'my_list'?", options: {A: "my_list(0)", B: "my_list[0]", C: "my_list.first()", D: "my_list[1]"}, correct: "B", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 63, question: "What does the append() method do?", options: {A: "Removes the last element", B: "Adds a single element to the end of the list", C: "Inserts an element at a specific position", D: "Returns the list in reverse order"}, correct: "B", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 64, question: "What is the difference between append() and extend()?", options: {A: "They are identical", B: "append() adds one element; extend() adds multiple elements", C: "extend() adds to beginning; append() adds to end", D: "append() for lists; extend() for tuples"}, correct: "B", difficulty: "intermediate", lesson: "Lists, Tuples & Dictionary"},
+            {id: 65, question: "What is a tuple in Python?", options: {A: "An ordered, mutable collection", B: "An ordered, immutable collection", C: "An unordered collection of unique items", D: "A collection of key-value pairs"}, correct: "B", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 66, question: "How do you create a dictionary?", options: {A: "{'key': 'value'}", B: "{'key', 'value'}", C: "['key', 'value']", D: "('key', 'value')"}, correct: "A", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 67, question: "What is list slicing?", options: {A: "Cutting a list with a knife", B: "Extracting a portion using start:end:step notation", C: "Removing elements from a list", D: "Joining lists together"}, correct: "B", difficulty: "intermediate", lesson: "Lists, Tuples & Dictionary"},
+            {id: 68, question: "What is the difference between remove() and pop()?", options: {A: "remove() by value; pop() by index", B: "pop() by value; remove() by index", C: "They are identical", D: "remove() deletes list; pop() returns elements"}, correct: "A", difficulty: "intermediate", lesson: "Lists, Tuples & Dictionary"},
+            {id: 69, question: "How do you access a value in a dictionary by key?", options: {A: "my_dict.key", B: "my_dict['key']", C: "my_dict(key)", D: "my_dict.get_value(key)"}, correct: "B", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 70, question: "Can you modify a tuple after creation?", options: {A: "Yes, tuples are mutable", B: "No, tuples are immutable", C: "Only if it's a frozenset", D: "Yes, but only specific elements"}, correct: "B", difficulty: "beginner", lesson: "Lists, Tuples & Dictionary"},
+            {id: 71, question: "What does the keys() method return?", options: {A: "A list of values", B: "A list of keys", C: "A dict_keys object containing all keys", D: "The first key"}, correct: "C", difficulty: "intermediate", lesson: "Lists, Tuples & Dictionary"},
+            {id: 72, question: "What is negative indexing?", options: {A: "Indexing from the middle", B: "Accessing elements from the end using negative numbers", C: "Using negative numbers in arithmetic", D: "An error in indexing"}, correct: "B", difficulty: "intermediate", lesson: "Lists, Tuples & Dictionary"},
+
+            // Lesson 7: Sets & Frozenset (12 questions)
+            {id: 73, question: "What is a set?", options: {A: "Ordered, mutable collection of unique elements", B: "Unordered, mutable collection of unique elements", C: "Immutable collection of any items", D: "Collection of key-value pairs"}, correct: "B", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 74, question: "How do you create an empty set?", options: {A: "empty_set = {}", B: "empty_set = []", C: "empty_set = set()", D: "empty_set = ()"}, correct: "C", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 75, question: "What type of objects can be in a set?", options: {A: "Only integers", B: "Only immutable objects (int, float, string, tuple)", C: "Any type of object", D: "Only strings and numbers"}, correct: "B", difficulty: "intermediate", lesson: "Sets & Frozenset"},
+            {id: 76, question: "What is a frozenset?", options: {A: "A set frozen in time", B: "An immutable version of a set", C: "Set with special freezing methods", D: "Set containing frozen objects"}, correct: "B", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 77, question: "What property of sets removes duplicate elements?", options: {A: "Sets are ordered", B: "Sets are mutable", C: "Sets contain only unique elements", D: "Sets are unindexed"}, correct: "C", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 78, question: "Can you access set elements by index like my_set[0]?", options: {A: "Yes, sets support indexing", B: "No, sets are unordered and unindexed", C: "Only for frozensets", D: "Yes, but in reverse order"}, correct: "B", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 79, question: "Which set operation returns elements in both sets?", options: {A: "Union", B: "Intersection", C: "Difference", D: "Symmetric difference"}, correct: "B", difficulty: "intermediate", lesson: "Sets & Frozenset"},
+            {id: 80, question: "What does set union do?", options: {A: "Returns common elements", B: "Returns all unique elements from both sets", C: "Returns elements in first set only", D: "Combines sets into nested structure"}, correct: "B", difficulty: "intermediate", lesson: "Sets & Frozenset"},
+            {id: 81, question: "Can you modify a frozenset after creation?", options: {A: "Yes, it's still a set", B: "No, frozensets are immutable", C: "Only with special methods", D: "Yes, by converting to list"}, correct: "B", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 82, question: "What is the purpose of add() method?", options: {A: "Adds multiple elements", B: "Adds a single element to the set", C: "Adds and returns value", D: "Combines two sets"}, correct: "B", difficulty: "beginner", lesson: "Sets & Frozenset"},
+            {id: 83, question: "What mathematical property is important for set operations?", options: {A: "Algebra", B: "Set theory (union, intersection, difference)", C: "Arithmetic", D: "Geometry"}, correct: "B", difficulty: "advanced", lesson: "Sets & Frozenset"},
+            {id: 84, question: "What will set([1, 1, 2, 2, 3]) return?", options: {A: "{1, 1, 2, 2, 3}", B: "{1, 2, 3}", C: "[1, 2, 3]", D: "{1: 1, 2: 2, 3: 3}"}, correct: "B", difficulty: "beginner", lesson: "Sets & Frozenset"},
+
+            // Lesson 8: Modules & Functions (12 questions)
+            {id: 85, question: "What is a module in Python?", options: {A: "A mathematical operation", B: "A .py file containing Python code that can be imported", C: "A built-in function", D: "A type of variable"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 86, question: "How do you import a module?", options: {A: "load module_name", B: "import module_name", C: "include module_name", D: "require module_name"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 87, question: "What does 'from module import name' do?", options: {A: "Imports the entire module", B: "Imports only specific names from a module", C: "Deletes the module", D: "Renames the module"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 88, question: "What is an alias in module imports?", options: {A: "Alternative name for a module", B: "Duplicate module", C: "Shorthand name created with 'as' keyword", D: "Error condition"}, correct: "C", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 89, question: "What are the three types of modules?", options: {A: "Simple, complex, advanced", B: "Built-in, user-defined, external", C: "Functions, classes, variables", D: "Local, global, static"}, correct: "B", difficulty: "intermediate", lesson: "Modules & Functions"},
+            {id: 90, question: "What is a function?", options: {A: "Type of variable", B: "Reusable block of code performing a specific task", C: "A module", D: "Class definition"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 91, question: "How do you define a function?", options: {A: "function_name(): pass", B: "def function_name(): pass", C: "function function_name(): pass", D: "func function_name(): pass"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 92, question: "What is the purpose of the 'return' statement?", options: {A: "To loop back to start", B: "To return a value from a function", C: "To exit the program", D: "To import modules"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 93, question: "What is a parameter in a function?", options: {A: "Variable passed when calling function", B: "Variable inside function", C: "Value in function definition", D: "Module variable"}, correct: "C", difficulty: "intermediate", lesson: "Modules & Functions"},
+            {id: 94, question: "What does 'from module import *' do?", options: {A: "Imports only necessary items", B: "Imports all public names from a module", C: "Deletes all imports", D: "Creates a new module"}, correct: "B", difficulty: "intermediate", lesson: "Modules & Functions"},
+            {id: 95, question: "What are built-in modules?", options: {A: "Modules you create", B: "Pre-installed modules (math, os, sys)", C: "Modules installed via pip", D: "Built into functions"}, correct: "B", difficulty: "beginner", lesson: "Modules & Functions"},
+            {id: 96, question: "Purpose of default parameter values?", options: {A: "Make functions complex", B: "Provide fallback values when arguments omitted", C: "Prevent function calls", D: "Require all parameters"}, correct: "B", difficulty: "intermediate", lesson: "Modules & Functions"},
+
+            // Lesson 9: Exception Handling (4 questions)
+            {id: 97, question: "What is an exception in Python?", options: {A: "An error that always crashes the program", B: "An event that disrupts normal program flow", C: "A type of variable", D: "A module"}, correct: "B", difficulty: "beginner", lesson: "Exception Handling"},
+            {id: 98, question: "What is the purpose of the 'try' block?", options: {A: "Test if variable exists", B: "Test a block of code for errors", C: "Attempt to import modules", D: "Try multiple conditions"}, correct: "B", difficulty: "beginner", lesson: "Exception Handling"},
+            {id: 99, question: "What is the purpose of the 'except' block?", options: {A: "Exclude code from execution", B: "Handle specific exceptions from try block", C: "Exit the program", D: "Skip the rest of the code"}, correct: "B", difficulty: "beginner", lesson: "Exception Handling"},
+            {id: 100, question: "What does the 'finally' block do?", options: {A: "Runs only if exception occurs", B: "Runs only if no exception occurs", C: "Always runs after try-except blocks", D: "Runs before the try block"}, correct: "C", difficulty: "beginner", lesson: "Exception Handling"}
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = {};
+        let quizActive = false;
+        let answered = {};
+
+        function startQuiz() {
+            quizActive = true;
+            currentQuestion = 0;
+            userAnswers = {};
+            answered = {};
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+
+            const difficultyClass = `difficulty-${question.difficulty}`;
+            const difficultyText = question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1);
+
+            let optionsHTML = '';
+            for (let key in question.options) {
+                const isSelected = userAnswers[currentQuestion] === key ? 'selected' : '';
+                const isAnswered = answered[currentQuestion];
+                let optionClass = '';
+
+                if (isAnswered) {
+                    if (key === question.correct) {
+                        optionClass = 'correct';
+                    } else if (userAnswers[currentQuestion] === key) {
+                        optionClass = 'incorrect';
+                    }
+                }
+
+                optionsHTML += `
+                    <div class="option ${optionClass}">
+                        <input type="radio" name="answer" value="${key}"
+                               onchange="selectAnswer('${key}')"
+                               ${isSelected ? 'checked' : ''}>
+                        <label style="margin: 0; cursor: pointer; flex-grow: 1;">
+                            <strong>${key})</strong> ${question.options[key]}
+                        </label>
+                    </div>
+                `;
+            }
+
+            let feedbackHTML = '';
+            if (answered[currentQuestion]) {
+                const isCorrect = userAnswers[currentQuestion] === question.correct;
+                if (isCorrect) {
+                    feedbackHTML = `<div class="feedback-message feedback-correct">✅ Correct Answer!</div>`;
+                } else {
+                    feedbackHTML = `
+                        <div class="feedback-message feedback-incorrect">❌ Wrong Answer!</div>
+                        <div class="correct-answer-info">
+                            <strong>Correct Answer:</strong> ${question.correct}) ${question.options[question.correct]}
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = `
+                <div class="difficulty-badge ${difficultyClass}">${difficultyText}</div>
+                <div class="question-text">Q${currentQuestion + 1}. ${question.question}</div>
+                <div class="options">${optionsHTML}</div>
+                ${feedbackHTML}
+            `;
+
+            updateProgress();
+            updateNavigation();
+            updateQuestionCounter();
+        }
+
+        function selectAnswer(answer) {
+            userAnswers[currentQuestion] = answer;
+            answered[currentQuestion] = true;
+            loadQuestion();
+
+            // Auto-enable submit button when all answered or last question answered
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('submitBtn').style.display = 'inline-block';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').disabled = currentQuestion === questions.length - 1 || !answered[currentQuestion];
+
+            // Show submit button only on last question when answered
+            if (currentQuestion === questions.length - 1 && answered[currentQuestion]) {
+                document.getElementById('submitBtn').style.display = 'inline-block';
+            }
+        }
+
+        function updateQuestionCounter() {
+            const answeredCount = Object.keys(answered).length;
+            document.getElementById('questionCounter').textContent =
+                `Question ${currentQuestion + 1} of ${questions.length} | Answered: ${answeredCount}/100`;
+        }
+
+        function submitQuiz() {
+            // Check if all questions are answered
+            const answeredCount = Object.keys(answered).length;
+            if (answeredCount < questions.length) {
+                if (!confirm(`You have only answered ${answeredCount} out of 100 questions. Do you want to submit anyway?`)) {
+                    return;
+                }
+            }
+
+            let correctCount = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === questions[i].correct) {
+                    correctCount++;
+                }
+            }
+
+            const percentage = (correctCount / questions.length) * 100;
+            const passed = percentage >= 70;
+
+            // Display results
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+
+            document.getElementById('scoreValue').textContent = correctCount;
+            const scoreCircle = document.getElementById('scoreCircle');
+            const resultMessage = document.getElementById('resultMessage');
+            const statusText = document.getElementById('statusText');
+
+            if (passed) {
+                scoreCircle.className = 'score-circle pass';
+                resultMessage.className = 'result-message pass';
+                resultMessage.textContent = '✅ Congratulations! You Passed! 🎉';
+                statusText.textContent = 'PASSED';
+                statusText.style.color = '#4caf50';
+            } else {
+                scoreCircle.className = 'score-circle fail';
+                resultMessage.className = 'result-message fail';
+                resultMessage.textContent = '❌ Sorry! You Did Not Pass.';
+                statusText.textContent = 'FAILED';
+                statusText.style.color = '#f44336';
+            }
+
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('wrongCount').textContent = questions.length - correctCount;
+            document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
+
+            window.scrollTo(0, 0);
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            quizActive = false;
+            currentQuestion = 0;
+            userAnswers = {};
+            answered = {};
+        }
+    </script>
+</body>
+</html>
